@@ -15,6 +15,7 @@ class User(db.Model):
         return {
             "id": self.id,
             "email": self.email,
+            "password": self.password,
             # do not serialize the password, its a security breach
         }
     
@@ -68,34 +69,18 @@ class Character(db.Model):
             # do not serialize the password, its a security breach
         }
     
-class Favorites_planet(db.Model):
-       __tablename__ = "favorites_planet"
-       id = db.Column(db.Integer, primary_key=True)
-       id_user = db.Column(db.Integer, db.ForeignKey ("user.id"),  nullable=False)
-       id_planet = db.Column(db.Integer, db.ForeignKey ("planet.id"), nullable=True)
-
-       def __repr__(self):
+class Favorites(db.Model):
+    __tablename__ = 'favorites'
+    id = db.Column(db.Integer, primary_key=True)
+    id_user = db.Column(db.Integer, db.ForeignKey ("user.id"),  nullable=False)
+    id_character = db.Column(db.Integer, db.ForeignKey ("character.id"), nullable=True)
+    id_planet = db.Column(db.Integer, db.ForeignKey ("planet.id"), nullable=True)
+    def __repr__(self):
         return "<Favorites %r>" % self.id
-       
-       def serialize(self):
-        return {
-            "id": self.id,
-            "id_user": self.id_user,
-            "id_planet": self.id_planet,
-        }
-
-class Favorites_character(db.Model):
-       __tablename__ = "favorites_character"
-       id = db.Column(db.Integer, primary_key=True)
-       id_user = db.Column(db.Integer, db.ForeignKey ("user.id"),  nullable=False)
-       id_character = db.Column(db.Integer, db.ForeignKey ("character.id"), nullable=True)
-
-       def __repr__(self):
-        return "<Favorites %r>" % self.id
-       
-       def serialize(self):
+    def serialize(self):
         return {
             "id": self.id,
             "id_user": self.id_user,
             "id_character": self.id_character,
+            "id_planet": self.id_planet,
         }

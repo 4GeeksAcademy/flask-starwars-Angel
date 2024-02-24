@@ -8,7 +8,7 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User, Character, Planet, Favorites_planet, Favorites_character
+from models import db, User, Character, Planet, Favorites
 #from models import Person
 
 app = Flask(__name__)
@@ -53,11 +53,10 @@ def create_user():
 
 @app.route('/user/favorites', methods=['GET'])
 def get_favorites():
-    favorite_planet = Favorites_planet.query.all()
-    favorite_character = Favorites_character.query.all()
-    planet_favorites = list(map(lambda x: x.serialize(), favorite_planet))
-    character_favorites = list(map(lambda x: x.serialize(), favorite_character))
-    return jsonify(planet_favorites, character_favorites), 200
+    favorites = Favorites.query.all()
+    new_favorites = list(map(lambda x: x.serialize(), favorites))
+    
+    return jsonify(new_favorites), 200
 
 
 
@@ -124,34 +123,42 @@ def get_planet_id(planets_id):
     else:
         return jsonify({"error": "Planet not found"}), 404
     
+    
 
-
-@app.route('/favorites_planet/planet/<int:planet_id>', methods=['POST'])
-def create_favorites_planet(planet_id):
+@app.route('/favorites/planet/<int:planet_id>', methods=['POST'])
+def create_favorites_planets(planet_id):
     planets = Planet.query.get(planet_id)
     if planets is None:
-        return  jsonify({"error"}), 404
-    new_favorite = Favorites_planet(
-      id_planets= planet_id,
-      id_user= 1
+        return  jsonify({"error": "Not found"}), 404
+    
+    new_favorite = Favorites(
+      id_planet= planet_id,
+      id_user= 1  
     )
+    
     db.session.add(new_favorite)
     db.session.commit()
     return jsonify(new_favorite.serialize()), 200
 
 
-@app.route('/favorites_character/character/<int:character_id>', methods=['POST'])
-def create_favorites_people(character_id):
-    people = Character.query.get(character_id)
-    if people is None:
-        return  jsonify({"error"}), 404
-    new_favorite = Favorites_character(
+@app.route('/favorites/character/<int:people_id>', methods=['POST'])
+def create_favorites_character(character_id):
+    character = Character.query.get(character_id)
+    if character is None:
+        return  jsonify({"error": "Not found"}), 404
+    
+    new_favorite = Favorites(
       id_character= character_id,
-      id_user= 1
+      id_user= 1  
     )
+    
     db.session.add(new_favorite)
     db.session.commit()
     return jsonify(new_favorite.serialize()), 200
+
+
+
+
 
 
 
