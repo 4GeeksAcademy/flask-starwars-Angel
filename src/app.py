@@ -152,13 +152,10 @@ def create_favorites_character(character_id):
 
 
 
-
-
-
 @app.route('/favorites_planet/planet/<int:planet_id>', methods=['DELETE'])
 def delete_planet_favorite(planet_id):
     # Similar a las funciones anteriores, pero en lugar de añadir un favorito, aquí eliminas uno existente.
-    favorito = Favorites_planet.query.filter_by(planet_id=planet_id).first()
+    favorito = Favorites.query.filter_by(planet_id=planet_id).first()
     if favorito:
         db.session.delete(favorito)
         db.session.commit()
@@ -171,7 +168,7 @@ def delete_planet_favorite(planet_id):
 @app.route('/favorites_character/character/<int:character_id>', methods=['DELETE'])  
 def delete_character_favorite(character_id):
     # Similar a las funciones anteriores, pero en lugar de añadir un favorito, aquí eliminas uno existente.
-    favorito = Favorites_character.query.filter_by(character_id=character_id).first()
+    favorito = Favorites.query.filter_by(character_id=character_id).first()
     if favorito:
         db.session.delete(favorito)
         db.session.commit()
