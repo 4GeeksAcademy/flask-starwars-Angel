@@ -124,37 +124,29 @@ def get_planet_id(planets_id):
         return jsonify({"error": "Planet not found"}), 404
     
     
+    
 
 @app.route('/favorites/planet/<int:planet_id>', methods=['POST'])
 def create_favorites_planets(planet_id):
-    planets = Planet.query.get(planet_id)
-    if planets is None:
-        return  jsonify({"error": "Not found"}), 404
+
+    user_id = 1
     
-    new_favorite = Favorites(
-      id_planet= planet_id,
-      id_user= 1  
-    )
-    
-    db.session.add(new_favorite)
+    favorite = Favorites(user_id=user_id, planet_id=planet_id)
+    db.session.add(favorite)
     db.session.commit()
-    return jsonify(new_favorite.serialize()), 200
+    return jsonify({"message": "Planeta añadido"}), 201
+    
 
 
-@app.route('/favorites/character/<int:people_id>', methods=['POST'])
+@app.route('/favorites/character/<int:character_id>', methods=['POST'])
 def create_favorites_character(character_id):
-    character = Character.query.get(character_id)
-    if character is None:
-        return  jsonify({"error": "Not found"}), 404
+       
+    user_id = 1
     
-    new_favorite = Favorites(
-      id_character= character_id,
-      id_user= 1  
-    )
-    
-    db.session.add(new_favorite)
+    favorite = Favorites(user_id=user_id, character_id=character_id)
+    db.session.add(favorite)
     db.session.commit()
-    return jsonify(new_favorite.serialize()), 200
+    return jsonify({"message": "Personaje añadido"}), 201
 
 
 

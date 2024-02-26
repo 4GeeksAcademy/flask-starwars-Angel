@@ -7,6 +7,7 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False, default=False)
+    favorite = db.Column(db.String()), db.ForeignKey
 
     def __repr__(self):
         return '<User %r>' % self.username 
@@ -15,12 +16,11 @@ class User(db.Model):
         return {
             "id": self.id,
             "email": self.email,
-            "password": self.password,
             # do not serialize the password, its a security breach
         }
     
 class Planet(db.Model):
-    __tablename__ = 'planet'
+    __tablename__ = 'planets'
     # Here we define columns for the table address.
     # Notice that each column is also a normal Python instance attribute.
     id = db.Column(db.Integer, primary_key=True)
@@ -45,7 +45,7 @@ class Planet(db.Model):
         }
     
 class Character(db.Model):
-    __tablename__ = 'character'
+    __tablename__ = 'characters'
     # Here we define columns for the table address.
     # Notice that each column is also a normal Python instance attribute.
     id = db.Column(db.Integer, primary_key=True)
@@ -72,15 +72,15 @@ class Character(db.Model):
 class Favorites(db.Model):
     __tablename__ = 'favorites'
     id = db.Column(db.Integer, primary_key=True)
-    id_user = db.Column(db.Integer, db.ForeignKey ("user.id"),  nullable=False)
-    id_character = db.Column(db.Integer, db.ForeignKey ("character.id"), nullable=True)
-    id_planet = db.Column(db.Integer, db.ForeignKey ("planet.id"), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey ("user.id"),  nullable=False)
+    character_id = db.Column(db.Integer, db.ForeignKey ("characters.id"), nullable=True)
+    planet_id = db.Column(db.Integer, db.ForeignKey ("planets.id"), nullable=True)
     def __repr__(self):
-        return "<Favorites %r>" % self.id
+        return "<Favorites %r>" % self.id   
     def serialize(self):
         return {
             "id": self.id,
-            "id_user": self.id_user,
-            "id_character": self.id_character,
-            "id_planet": self.id_planet,
+            "user_id": self.user_id,
+            "character_id": self.character_id,
+            "planet_id": self.planet_id,
         }
